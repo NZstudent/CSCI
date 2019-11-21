@@ -5,21 +5,17 @@ public class Maze {
 
     static char[][] maze = new char[12][12];
 
-    public Maze(String line){
+    public Maze(){
 
     }
 
-    public static void generateMaze(ArrayList<String> temps){
+    static void generateMaze(ArrayList<String> temps){
         int y = -1;
         for (String s : temps) {
             int x = 0;
             y++;
             for(int i = 0; i <= (s.length()-1); i++) {
-                System.out.print("Character: "+s.charAt(i));
-                System.out.println();
-                System.out.println("MAZE NUMBER: "+x+ ", " +y);
                 maze[x][y] = s.charAt(i);
-                System.out.println("----------------------------");
                 x++;
             }
         }
@@ -27,7 +23,7 @@ public class Maze {
 
 
     }
-        public static String removeWhiteSpace(String input) {
+        static String removeWhiteSpace(String input) {
             StringBuilder newSentence = new StringBuilder();
 
             for (int i = 0; i < input.length(); ++i) {
@@ -39,7 +35,7 @@ public class Maze {
             return newSentence.toString();
         }
 
-        public static void Print(){
+        static void Print(){
             for(int i = 0; i <= 11; i++){
                 System.out.print("\n");
                 for(int j=0; j <= 11; j++){
@@ -49,94 +45,129 @@ public class Maze {
         }
 
 
-        public static void mazeRunner(char[][] maze, int col, int row, int hCol, int hRow){
+        static void mazeRunner(char[][] maze, int col, int row, int hCol, int hRow){
             int xtemp;
             int ytemp;
+            int direction = 1;
 
-            if(col == 'F'){
+            if(maze[col + 1][row] == 'F'||maze[col][row - 1] == 'F'||maze[col][row + 1] == 'F'){
+                maze[col][row] = 'o';
+                Print();
+                System.out.println();
                 System.out.println("Maze Complete");
-            }else{
-                maze[col][row] = 'x';
-                maze[hCol][hRow] = '*';
-                Print();
-                //Check down
-                if(maze[hCol][hRow]=='.'
-                ){
+            }else {
 
-                    mazeRunner(maze, col, row, hCol, hRow);
-                //CHeck right
-                }else if(maze[hCol+1][hRow-1]=='.' ){
-                    col++;
-                    hCol = col;
-                    mazeRunner(maze, col, row, hCol, hRow);
-                //check up
-                }else if(maze[hCol][hRow-2]=='.' ){
-                    row--;
-                    hRow = row;
-                    hCol++;
-                    mazeRunner(maze, col, row, hCol, hRow);
-                //check left
-                }else if(maze[hCol-1][hRow]=='.'){
-                    col--;
-                    hRow = row-1;
-                    mazeRunner(maze, col, row, hCol, hRow);
+                xtemp = col;
+                ytemp = row;
+
+                maze[col][row] = 'o';
+                Print();
+                System.out.println("------------------------");
+                System.out.println("Curr position is " + col + ", " + row);
+                System.out.println("Hand position is " + hCol + ", " + hRow);
+
+                if (hRow > row) direction = 1;//Facing East
+                else if (hCol > col) direction = 2;//Facing North
+                else if (row > hRow) direction = 3;//Facing West
+                else if (col > hCol) direction = 4; //Facing South
+
+                switch (direction) {
+                    case 1://Facing East
+                        System.out.println("facing east");
+                        if (maze[hCol][hRow] == '.' || maze[hCol][hRow] == 'x') {
+                            row++;
+                            hCol = col - 1;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col + 1][row] == '.' || maze[col + 1][row] == 'x') {//If facing empty space, move to that space,MOve hand as well
+                            col++;
+                            hCol++;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col + 1][row] == '#') { //Rotate but no move placing hand on side wall
+                            hCol++;
+                            hRow--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col + 1][row] == 'F') {//If facing empty space, move to that space,MOve hand as well
+                            mazeRunner(maze, col, row, hCol, hRow);
+
+                        }
+                        break;
+
+                    case 2://Facing North
+                        System.out.println("Facing North");
+                        if (maze[hCol][hRow] == '.' || maze[hCol][hRow] == 'x') {
+                            col++;
+                            hRow++;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row - 1] == '.' || maze[col][row - 1] == 'x') {
+                            row--;
+                            hRow--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row - 1] == '#') {
+                            hRow--;
+                            hCol--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row - 1] == 'F') {
+                            mazeRunner(maze, col, row, hCol, hRow);
+
+                        }
+                        break;
+
+                    case 3://Facing West
+                        System.out.println("Facing West");
+                        if (maze[hCol][hRow] == '.' || maze[hCol][hRow] == 'x') { //open right pathway go north
+                            row--;
+                            hCol = col + 1;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col - 1][row] == '.' || maze[col - 1][row] == 'x') {
+                            col--;
+                            hCol--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col - 1][row] == '#') {
+                            hRow++;
+                            hCol--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        }else if (maze[col - 1][row] == 'F') {
+                            mazeRunner(maze, col, row, hCol, hRow);
+
+                        }
+                        break;
+
+                    case 4://Facing South
+                        System.out.println("Facing South");
+                        if (maze[hCol][hRow] == '.' || maze[hCol][hRow] == 'x') {
+                            col--;
+                            hRow--;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row + 1] == '.' || maze[col][row + 1] == 'x') {
+                            row++;
+                            hRow++;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row + 1] == '#') {
+                            hCol++;
+                            hRow++;
+                            maze[xtemp][ytemp] = 'x';
+                            mazeRunner(maze, col, row, hCol, hRow);
+                        } else if (maze[col][row + 1] == 'F') {
+                            mazeRunner(maze, col, row, hCol, hRow);
+
+                        }
+                        break;
+                    default:
+                        break;
+
                 }
-                maze[col][row] = 'x';
-                //maze[handLocX][handLocY] = 'o';
-                Print();
-                System.out.println("\n---------------------------");
-
-
-//                //Go right
-//                if(maze[x+1][y]=='.') {
-//                    x++;
-//                    handLocX++;
-//                    mazeRunner(maze, x, y, handLocX, handLocY);
-//                }
-//                //Go Directly Down
-//                if(maze[handLocX][handLocY] == '.'){
-//                    y++;
-//                    handLocX--;
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-//                //go Directly up
-//                }if(maze[handLocX][handLocY] == '#' && maze[x+1][y]=='#'){
-//                    y--;
-//
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-//
-//                }
-                //go straight down
-//                if(maze[handLocX][handLocY] == '#' &&)
-
-//                xtemp = x;
-//                ytemp = y;
-//                maze[xtemp][ytemp] = 'x';
-
-                //System.out.println("\n--------ruck------------------");
-                //Making the Move//
-
-//                if(maze[x+1][y] == '.'){
-//                    x++;
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-                //Go Right
-//                }if(maze[x][y-1]== '.'){
-//                    y--;
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-                //Go up
-//                }if(maze[x][y+1]=='.'){
-//                    y++;
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-                //Go Down
-//                }if(maze[x-1][y]=='.'){
-//                    x--;
-//                    mazeRunner(maze,x,y,handLocX,handLocY);
-                //Go left
-
-//                }else{}
-
             }
-
-
-
-        }
+    }
 }
+

@@ -8,7 +8,7 @@ public class Main {
 
 
     public static void main(String[] args){
-        ArrayList<String> temps = new ArrayList<String>();
+        ArrayList<String> temps = new ArrayList<>();
 
         try {
             Scanner file = new Scanner(new File("input.txt"));
@@ -23,10 +23,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        System.out.println(temps);
         Maze.generateMaze(temps);
-
-        System.out.println("Maze::::::::::::::");
         Maze.Print();
         Maze.mazeRunner(Maze.maze, 0,2, 0, 3);
 
