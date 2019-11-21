@@ -1,13 +1,10 @@
 package com.company;
-import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.List;
 
 public class Maze {
 
     static char[][] maze = new char[12][12];
 
-    static char c;
     public Maze(String line){
 
     }
@@ -52,35 +49,90 @@ public class Maze {
         }
 
 
-        public static void mazeRunner(char[][] maze, int x, int y, int handLocX, int handLocY ){
+        public static void mazeRunner(char[][] maze, int col, int row, int hCol, int hRow){
             int xtemp;
             int ytemp;
-            if(x == 'F'){
+
+            if(col == 'F'){
                 System.out.println("Maze Complete");
             }else{
+                maze[col][row] = 'x';
+                maze[hCol][hRow] = '*';
+                Print();
+                //Check down
+                if(maze[hCol][hRow]=='.'
+                ){
+
+                    mazeRunner(maze, col, row, hCol, hRow);
+                //CHeck right
+                }else if(maze[hCol+1][hRow-1]=='.' ){
+                    col++;
+                    hCol = col;
+                    mazeRunner(maze, col, row, hCol, hRow);
+                //check up
+                }else if(maze[hCol][hRow-2]=='.' ){
+                    row--;
+                    hRow = row;
+                    hCol++;
+                    mazeRunner(maze, col, row, hCol, hRow);
+                //check left
+                }else if(maze[hCol-1][hRow]=='.'){
+                    col--;
+                    hRow = row-1;
+                    mazeRunner(maze, col, row, hCol, hRow);
+                }
+                maze[col][row] = 'x';
+                //maze[handLocX][handLocY] = 'o';
+                Print();
+                System.out.println("\n---------------------------");
+
+
+//                //Go right
+//                if(maze[x+1][y]=='.') {
+//                    x++;
+//                    handLocX++;
+//                    mazeRunner(maze, x, y, handLocX, handLocY);
+//                }
+//                //Go Directly Down
+//                if(maze[handLocX][handLocY] == '.'){
+//                    y++;
+//                    handLocX--;
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+//                //go Directly up
+//                }if(maze[handLocX][handLocY] == '#' && maze[x+1][y]=='#'){
+//                    y--;
+//
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+//
+//                }
+                //go straight down
+//                if(maze[handLocX][handLocY] == '#' &&)
 
 //                xtemp = x;
 //                ytemp = y;
 //                maze[xtemp][ytemp] = 'x';
-                maze[x][y] = 'x';
-                Print();
-                System.out.println("\n--------------------------");
+
+                //System.out.println("\n--------ruck------------------");
                 //Making the Move//
 
-                if(maze[x+1][y] == '.'){
-                    x++;
-                    mazeRunner(maze,x,y,handLocX,handLocY);
-                }if(maze[x][y-1]== '.'){
-                    y--;
-                    mazeRunner(maze,x,y,handLocX,handLocY);
-                }if(maze[x][y+1]=='.'){
-                    y++;
-                    mazeRunner(maze,x,y,handLocX,handLocY);
-                }if(maze[x-1][y]=='.'){
-                    x--;
-                    mazeRunner(maze,x,y,handLocX,handLocY);
+//                if(maze[x+1][y] == '.'){
+//                    x++;
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+                //Go Right
+//                }if(maze[x][y-1]== '.'){
+//                    y--;
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+                //Go up
+//                }if(maze[x][y+1]=='.'){
+//                    y++;
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+                //Go Down
+//                }if(maze[x-1][y]=='.'){
+//                    x--;
+//                    mazeRunner(maze,x,y,handLocX,handLocY);
+                //Go left
 
-                }else{}
+//                }else{}
 
             }
 

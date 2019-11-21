@@ -3,14 +3,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class Main {
 
 
     public static void main(String[] args){
-        List<String> temps = new ArrayList<String>();
+        ArrayList<String> temps = new ArrayList<String>();
 
         try {
             Scanner file = new Scanner(new File("input.txt"));
@@ -26,11 +24,11 @@ public class Main {
         }
 
         System.out.println(temps);
-        Maze.generateMaze((ArrayList<String>) temps);
+        Maze.generateMaze(temps);
 
         System.out.println("Maze::::::::::::::");
         Maze.Print();
-        Maze.mazeRunner(Maze.maze, 0,2,0,3);
+        Maze.mazeRunner(Maze.maze, 0,2, 0, 3);
 
 
         }
